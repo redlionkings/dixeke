@@ -13,7 +13,8 @@ const UserSchema = new mongoose.Schema({
     numberOfTrips :{type: Number},
     numberOfKms: {type: Number},
     avatar: {type : String},
-    isActive:{type: Boolean, default: true}
+    isActive:{type: Boolean, default: true},
+    avatar : {type : String}
 })
 
 const User = mongoose.model("User", UserSchema);
