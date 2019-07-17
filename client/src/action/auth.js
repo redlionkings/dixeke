@@ -1,7 +1,6 @@
 import axios from 'axios'
 import _ from 'lodash';
 import getFingerPrint from '../helpers/getFingerprint';
-import Fingerprint2 from 'fingerprintjs2';
 import jwtDecode from 'jwt-decode';
 import setHeader from '../helpers/setHeader'
 export const getErrors = (err) => {
@@ -10,7 +9,6 @@ export const getErrors = (err) => {
         payload : err 
     }
 }
-
 export const register = (data,history) => {
     return (dispatch) => {
         axios({
@@ -20,10 +18,8 @@ export const register = (data,history) => {
             data: data
         })
         .then(res => {
-            console.log("res: ", res);
-            dispatch(getErrors(_.get(e, "response.data")))
             history.push("/")
-            alert("dang ky thanh cong")
+            alert("register success")
         })
         .catch(e  => {  
             if(e){
@@ -50,8 +46,7 @@ export const login = (data, history) => {
                 const token = res.data.token;
                 localStorage.setItem("token", token);
       
-                const decoded = jwtDecode(token); //redux store
-                
+                const decoded = jwtDecode(token); //redux store          
                 //
                 dispatch(setUserCurrent(decoded))
                 //set header
@@ -69,7 +64,6 @@ export const login = (data, history) => {
           });
     }
 }
-
   //test private
 export const testPrivate = () => {
     const token = localStorage.getItem("token")
@@ -89,19 +83,16 @@ export const testPrivate = () => {
         setHeader()
     }
   }
-
   export const setUserCurrent = (data) => {
       return {
           type : "SET_CURRENT_USER",
           payload : data
       }
   }
-
   export const getMyProfile = (id, callback) => {
     return (dispatch) => {
         axios.get(`/api/user/${id}`)
         .then(res => {
-            console.log(res.data)
             dispatch(setUserCurrent(res.data))
             callback(res.data)
         })

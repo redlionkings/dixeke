@@ -4,10 +4,6 @@ const {User} = require("../model/user")
 
  validatorRegisterInput = async (data) => {
     let error =  {};
-    ///////////////////////
-    //kiem tra xem input co bi bo trong hay khoong
-    //neu input bi bo trong thi cho no la blank
-    //data.email = data.email ? data.email : ""
     data.email = _.get(data,"email", "");
     data.password = _.get(data, "password", "");
     data.password2 = _.get(data, "password2", "");
@@ -16,7 +12,6 @@ const {User} = require("../model/user")
     data.phone = _.get(data,"phone", "");
     data.fullName = _.get(data,"fullName", "");
     //validate
-    //check co gui nhung la blank
     if(_.isEmpty(data.email))  //true is ok, false invalid
     {
         error.email = "email is required"
@@ -35,7 +30,6 @@ const {User} = require("../model/user")
         if(user) error.phone = "phone exit"
     }
 
-
     //password
     if (_.isEmpty(data.password)) {
         error.password = "password is required"
@@ -52,18 +46,8 @@ const {User} = require("../model/user")
         error.password2 = "password not match "
     }
     return {
-        // neu error la {} true, isValid = false khi error co thuoc tinh
         isValid : _.isEmpty(error),
         error
     }
 }
-
-// .toPairs // object ===> array
-// .fromPairs // array===> object
-
-// data (object) ==> data (array) = >> map (return tung element ==> array) ==> object 
-//               _.toPairse           _.map                                ._fromPairs
-//._fromPairs(_.fromPairS(data)).map)
-// _.chain(data).toPairs().map().fromPairs() 
-
 module.exports= validatorRegisterInput;

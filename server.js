@@ -1,19 +1,18 @@
-// 3rd packages
-const express = require("express");
+require('dotenv').config()
+
+let mongouri = "";
+if (process.env.STAGE === "development") {
+    mongouri = process.env.MONGO_URI_DEV
+}else if (process.env.STAGE === "production") {
+    mongouri = process.env.MONGODB_URI
+}
 const mongoose  = require("mongoose");
-
-
-mongoose.connect("mongodb://localhost:27017/xedike", {useNewUrlParser: true})
+mongoose.connect(mongouri, {useNewUrlParser: true})
 .then(() => console.log("Connected"))
 .catch(err=>console.log(err))
 //my package
-
-// app.get("/",( req, res) => {
-//     res.json({message : "Hello World"})
-// })
-//middle ware
+const express = require("express");
 const app = express();
-
 // middlewares
 // app.use(function(req, res, next) {
 //     res.header("Access-Control-Allow-Origin", "*");
@@ -21,7 +20,6 @@ const app = express();
 //     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, fingerprint,Authorization");
 //     next();
 // });
-
 //parser middlewares
 app.use(express.json())
 app.use(express.urlencoded({extended : true}))
