@@ -3,7 +3,9 @@ import _ from 'lodash';
 import getFingerPrint from '../helpers/getFingerprint';
 import jwtDecode from 'jwt-decode';
 import setHeader from '../helpers/setHeader'
+import { ToastsStore} from 'react-toasts';
 export const getErrors = (err) => {
+    console.log(err)
     return {
         type :"GET_ERRORS",
         payload : err 
@@ -34,7 +36,6 @@ export const login = (data, history) => {
     const {email,password} = data
     return (dispatch) => {
         getFingerPrint( fingerprint => {
-            axios.defaults.headers.common["fingerprint"] = fingerprint;
             axios({
               //defaut
               method: "POST",
@@ -42,19 +43,15 @@ export const login = (data, history) => {
               data: { email , password, fingerprint }
             })
               .then(res => {
-                console.log("res: ", res);
                 const token = res.data.token;
                 localStorage.setItem("token", token);
-      
                 const decoded = jwtDecode(token); //redux store          
                 //
                 dispatch(setUserCurrent(decoded))
                 //set header
                 setHeader(token, fingerprint)
-                axios.defaults.headers.common["Authorization"] = token;
-                axios.defaults.headers.common["fingerprint"] = fingerprint;
                 history.push("/")
-                alert("dang nhap thanh cong");
+                ToastsStore.success("Hey, you just clicked!123123")
               })         
               .catch(err => {
                   if (err) {
@@ -91,8 +88,10 @@ export const testPrivate = () => {
   }
   export const getMyProfile = (id, callback) => {
     return (dispatch) => {
+        console.log(id)
         axios.get(`/api/user/${id}`)
         .then(res => {
+            console.log(res.data)
             dispatch(setUserCurrent(res.data))
             callback(res.data)
         })

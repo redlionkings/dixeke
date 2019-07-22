@@ -11,7 +11,6 @@ import {
 } from "reactstrap";
 import { connect } from "react-redux";
 import {getMyProfile} from '../../action/auth'
-import jwtDecode from 'jwt-decode';
 import getFingerPrint from  '../../helpers/getFingerprint';
 import setHeaders from '../../helpers/setHeader';
 import axios from "axios";
@@ -33,26 +32,25 @@ class Profile extends Component {
   }
 
   componentDidMount() {
-
     const token = localStorage.getItem('token');
     if (!token) return
     // const decoded = jwtDecode(token)
     // this.props.setUserCurrent(decoded)
 
-    getFingerPrint(fingerprint => {
-      setHeaders(token,fingerprint)
- 
-      const { profile } = this.props.auth;
+    // getFingerPrint(fingerprint => {
+    //   setHeaders(token,fingerprint)
+     
+    // })
+     const { profile } = this.props.auth;
       this.props.getMyProfile(profile.id, (user) => {
+        console.log('123zz',user)
           this.setState(user)
       })
-    })
     // if( (Date.now) / 1000 > decoded.exp) {
     //     this.props.logout();
     // }
   }
   onChange = (e) => {
-    console.log(e)
       this.setState({
           [e.target.name] : e.target.value,
           file : e.target.files && e.target.files[0]
@@ -61,11 +59,10 @@ class Profile extends Component {
            const formData = new FormData();
            
             formData.append("avatar", this.state.file)
-            console.log(this.state.file)
             axios.post('/api/user/upload-avatar',formData)
             .then(res => this.setState({
                 avatar : res.data.avatar
-            }, console.log( res.data.avatar)))
+            }))
             .catch(err => console.log(err));
         })
   }

@@ -31,13 +31,14 @@ class Register extends Component {
     }
 
     render() {
+     const {errors} = this.props
         return (
           <div className="container text-left">
             <h1>Register</h1>
             <Form onSubmit = {this.hangdleSumbit}>
               <FormGroup>            
                 <Label for="email" className= "d-flex justify-content-between" >Email
-                <span className = "text-danger" > {this.props.errors.email ? this.props.errors.email : "" }</span>
+                <span className = "text-danger" > {errors.email ? errors.email : "" }</span>
                 </Label>
                 <Input
                   type="text"
@@ -46,12 +47,12 @@ class Register extends Component {
                   placeholder="Input mail here..."
                   value = {this.state.email}
                   onChange={this.hangdleOnchange}
-                  invalid={this.props.errors.email ? true : false  }
+                  invalid={errors.email ? true : false  }
                 />
               </FormGroup>
               <FormGroup>
                 <Label for="password" className= "d-flex justify-content-between" >Password
-                <span className = "text-danger" >{this.props.errors.password ? this.props.errors.password : "" }</span>
+                <span className = "text-danger" >{errors.password ? errors.password : "" }</span>
                 </Label>
                 <Input
                   type="password"
@@ -60,12 +61,12 @@ class Register extends Component {
                   placeholder="Input password here..."
                   value = {this.state.password}
                   onChange={this.hangdleOnchange}
-                  invalid={this.props.errors.password ? true : false  }
+                  invalid={errors.password ? true : false  }
                 />
               </FormGroup>
               <FormGroup>
                 <Label for="password2" className= "d-flex justify-content-between">Confirm Password
-                <span className = "text-danger" >{this.props.errors.password2 ? this.props.errors.password2 : "" }</span>
+                <span className = "text-danger" >{errors.password2 ? errors.password2 : "" }</span>
                 </Label>
                 <Input
                   type="password"
@@ -74,7 +75,7 @@ class Register extends Component {
                   placeholder="Input Confirm password here..."
                   value = {this.state.password2}
                   onChange={this.hangdleOnchange}
-                  invalid={this.props.errors.password2 ? true : false  }
+                  invalid={errors.password2 ? true : false  }
                 />
               </FormGroup>
               <FormGroup>
@@ -82,9 +83,7 @@ class Register extends Component {
                 <Input type="select" name="userType" id="userType" 
                 value = {this.state.userType}
                 onChange={this.hangdleOnchange} >
-                  <option value = "-1">Select User Type</option>
-                  <option value = "passenger">Passenger</option>
-                  <option value = "driver">Driver</option>
+
                 </Input>
               </FormGroup>
               <FormGroup>
@@ -97,7 +96,7 @@ class Register extends Component {
               </FormGroup>
               <FormGroup>
               <Label for="phone"  className= "d-flex justify-content-between" >Phone
-              <span className = "text-danger" >{this.props.errors.phone ? this.props.errors.phone : "" }</span>
+              <span className = "text-danger" >{errors.phone ? errors.phone : "" }</span>
               </Label>
               <Input
                   type="number"
@@ -106,7 +105,7 @@ class Register extends Component {
                   placeholder="Input phone here..."
                   value = {this.state.phone}
                   onChange={this.hangdleOnchange}
-                  invalid={this.props.errors.phone ? true : false  }
+                  invalid={errors.phone ? true : false  }
                 />
               </FormGroup>
               <FormGroup>
@@ -130,8 +129,7 @@ class Register extends Component {
 const mapStateToProps = (state) => {
   return {
       errors :state.errorsReducer
-   }
-     
+   }     
 };
 export default connect(mapStateToProps,{register})(Register)
 

@@ -1,15 +1,9 @@
 import React, { Component } from "react";
 import { Button, Form, FormGroup, Label, Input, FormText } from "reactstrap";
-import axios from "axios";
 import _ from "lodash";
 import {connect} from 'react-redux';
-import {withRouter} from 'react-router-dom';
-//with Router la higher order component
-//nhan 1 compnet tra va 1 component
-// B(A) B la withRoueter, A la Login khi do A se co luon cac props cua A
 import {login,testPrivate} from '../../action/auth';
-import Fingerprint2 from 'fingerprintjs2';
-import getFingerPrint from "../../helpers/getFingerprint";
+
  class Login extends Component {
   constructor(props) {
     super(props);
@@ -19,18 +13,6 @@ import getFingerPrint from "../../helpers/getFingerprint";
       error: {}
     };
   }
-  // //test private
-  // testPrivate = () => {
-  //   const token = localStorage.getItem("token")
-  //   getFingerPrint( fingerprint => {
-  //     axios.defaults.headers.common["Authorization"] = token;
-  //     axios.defaults.headers.common["fingerprint"] = fingerprint;
-  //     axios.get('api/user/test-private')
-  //     .then(res => console.log(res))
-  //     .catch(err => {console.log(err)})
-  //   })
-   
-  // }
   hangdleOnchange = e => {
     this.setState({
       [e.target.name]: e.target.value
@@ -42,11 +24,10 @@ import getFingerPrint from "../../helpers/getFingerprint";
     //fingerprint
     const { email, password } = this.state;
     this.props.login(this.state, this.props.history)
-  
 }
-
   render() {
-    return (
+    const {errors} = this.props
+    return (  
       <div className="container text-left">
         LOGIN
         <Form onSubmit={this.hangdleSumbit}>
@@ -54,7 +35,7 @@ import getFingerPrint from "../../helpers/getFingerprint";
             <Label for="email" className="d-flex justify-content-between">
               Email
               <span className="text-danger">
-                {this.state.error.errors ? this.state.error.errors : ""}
+                {errors.errors ? errors.errors : ""}
               </span>
             </Label>
             <Input
@@ -71,7 +52,7 @@ import getFingerPrint from "../../helpers/getFingerprint";
             <Label for="password" className="d-flex justify-content-between">
               Password
               <span className="text-danger">
-                {this.state.error.password ? this.state.error.password : ""}
+                {errors.password ? errors.password : ""}
               </span>
             </Label>
             <Input
@@ -85,12 +66,16 @@ import getFingerPrint from "../../helpers/getFingerprint";
             />
           </FormGroup>
           <Button>Login</Button>
-          <Button onClick = {testPrivate}>test</Button>
         </Form>
       </div>
     );
   }
 }
 
+const mapStateToProps = (state) => {
+  return {
+      errors :state.errorsReducer
+   }     
+};
 // export default withRouter(connect(null,{login})(Logi)
-export default connect(null,{login})(Login)
+export default connect(mapStateToProps,{login})(Login)
