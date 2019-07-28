@@ -5,7 +5,6 @@ import jwtDecode from 'jwt-decode';
 import setHeader from '../helpers/setHeader'
 import { ToastsStore} from 'react-toasts';
 export const getErrors = (err) => {
-    console.log(err)
     return {
         type :"GET_ERRORS",
         payload : err 
@@ -25,6 +24,7 @@ export const register = (data,history) => {
         })
         .catch(e  => {  
             if(e){
+                console.log(12321,e)
            dispatch(
                getErrors(_.get(e, "response.data")))
            }
@@ -45,13 +45,14 @@ export const login = (data, history) => {
               .then(res => {
                 const token = res.data.token;
                 localStorage.setItem("token", token);
+                localStorage.setItem("fingerprint", fingerprint);
                 const decoded = jwtDecode(token); //redux store          
                 //
                 dispatch(setUserCurrent(decoded))
                 //set header
                 setHeader(token, fingerprint)
                 history.push("/")
-                ToastsStore.success("Hey, you just clicked!123123")
+                ToastsStore.success("Success Login")
               })         
               .catch(err => {
                   if (err) {
@@ -88,10 +89,8 @@ export const testPrivate = () => {
   }
   export const getMyProfile = (id, callback) => {
     return (dispatch) => {
-        console.log(id)
         axios.get(`/api/user/${id}`)
         .then(res => {
-            console.log(res.data)
             dispatch(setUserCurrent(res.data))
             callback(res.data)
         })

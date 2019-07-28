@@ -4,15 +4,12 @@ const authenticating = (req, res, next) => {
     const token = req.header("Authorization");
     const fingerprint =  req.header("fingerprint");
     const key =  "Cybersoft" + fingerprint
-    console.log('figer',fingerprint)
-    console.log('key',key)
-    try {  
+    try{  
         const decoded = jwt.verify(token,key) 
-        console.log('decoded',decoded)
-            req.user = decoded;    
-            next()
+        req.user = decoded;    
+        next()
     }
-    catch(error) {
+    catch(error){
         res.status(403).json({errors : "Not Authorization"})
     }   
 }

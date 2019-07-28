@@ -31,9 +31,9 @@ const login = (req, res, next) => {
   const { email, password, fingerprint } = req.body;
   User.findOne({ email })
     .then(user => {
-      if (!user) return Promise.reject({ errors: "user does not exit" });
+      if (!user) return Promise.reject({ errors: "User does not exit" });
       bcrypt.compare(password, user.password, (err, isMatch) => {
-        if (!isMatch) return res.status(400).json(err);
+        if (!isMatch) return res.status(400).json({errors: 'Wrong Pass'});
         const payload = {
           id: user.id,
           email: user.email,
@@ -42,7 +42,7 @@ const login = (req, res, next) => {
         };
         const KEY = process.env.SECRET_KEY + fingerprint;
         jwt.sign(payload, KEY, { expiresIn: "1h" }, (err, token) => {
-          if (err) return res.status(400).json(err);
+          if (err)  return res.status(400).json({errors: 'Set Token Error'});
           return res.status(200).json({ message: "login success", token });
         });
       });

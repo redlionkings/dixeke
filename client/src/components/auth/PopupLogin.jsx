@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import _ from "lodash";
 import {connect} from 'react-redux';
-import {login} from '../../action/auth';
+import {login,getErrors} from '../../action/auth';
 import {ToastsContainer, ToastsStore} from 'react-toasts';
+import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import {
     MDBContainer,
     MDBRow,
@@ -25,6 +26,9 @@ import {
           error: {}
         };
       }
+      componentDidMount() {
+        this.props.getErrors({})
+      }
       hangdleOnchange = e => {
         this.setState({
           [e.target.name]: e.target.value
@@ -34,9 +38,8 @@ import {
       hangdleSumbit = e => {
         e.preventDefault();
         //fingerprint
-        const { email, password } = this.state;
         this.props.login(this.state, this.props.history)
-        ToastsStore.success("Hey, you just clicked!")
+        
     } 
   render() {
     const {errors} = this.props
@@ -54,18 +57,15 @@ import {
                 <form onSubmit={this.hangdleSumbit}>
                   <div className="grey-text text-left">
                     <MDBInput
-                      label="Type your email"
+                      label= 'Type Your Mail'
                       icon="envelope"
-                      group
                       type="email"
                       name="email"
                       id="email"
-                      validate
-                      error="wrong"
-                      success="right"
                       value={this.state.email}
                       onChange={this.hangdleOnchange}
-                      invalid={errors.errors ? true : false}
+                      required
+                      className={errors.errors ? "is-invalid" : ''}
                     />
                     <MDBInput
                       label="Type your password"
@@ -74,16 +74,16 @@ import {
                       type="password"
                       name="password"
                       id="password"
-                      validate
                       value={this.state.password}
                       onChange={this.hangdleOnchange}
-                      invalid={this.state.error.password ? true : false}
+                      className={errors.errors ? "is-invalid" : ''}
+                      required
                     />
-                    <span className="text-danger">
-                        {errors.errors ? errors.errors : ""}
-                    </span>
+                    <Label className='text-left'>
+                    <span className = "text-danger" > {errors.errors ? errors.errors : "" }</span>
+                    </Label>
                   </div>
-  
+         
                 <div className="text-center mt-4">
                   <MDBBtn
                     color="light-blue"
@@ -95,11 +95,6 @@ import {
                   <ToastsContainer store={ToastsStore}/>
                 </div>
                 </form>
-                <MDBModalFooter>
-                  <div className="font-weight-light">
-                    <a>Not a member? Sign Up</a>
-                  </div>
-                </MDBModalFooter>
               </MDBCardBody>
             </MDBCard>
           </MDBCol>
@@ -113,4 +108,4 @@ const mapStateToProps = (state) => {
         errors :state.errorsReducer
      }     
   };
-  export default connect(mapStateToProps,{login})(PopupLogin)
+  export default connect(mapStateToProps,{login,getErrors})(PopupLogin)

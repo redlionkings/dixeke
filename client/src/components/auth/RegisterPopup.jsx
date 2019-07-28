@@ -1,13 +1,9 @@
 
 import React, { Component } from 'react'
-import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
-import { MDBRow, 
-  MDBCol, MDBInput, MDBBtn,    MDBCard,
-  MDBCardBody,
-   MDBIcon, MDBCardHeader, MDBContainer  } from "mdbreact";
-import {register} from '../../action/auth'
+import { MDBRow, MDBCol, MDBInput, MDBBtn, MDBCard,MDBCardBody, MDBIcon, MDBCardHeader, MDBContainer  } from "mdbreact";
+import {register,getErrors} from '../../action/auth'
 import {connect} from 'react-redux';
-
+import { Label, Input } from 'reactstrap';
 import _ from 'lodash';
 
 class RegisterPopup extends Component {
@@ -25,6 +21,10 @@ class RegisterPopup extends Component {
         }
     } 
 
+    componentDidMount() {
+      this.props.getErrors({})
+    }
+
     hangdleOnchange = e => {
         this.setState({
             [e.target.name] : e.target.value
@@ -38,6 +38,7 @@ class RegisterPopup extends Component {
 
     render() {
      const {errors} = this.props
+
      const {email,password,password2,phone, DOB,userType, fullName} = this.state
         return (
           <MDBContainer className ="p-3">
@@ -60,10 +61,10 @@ class RegisterPopup extends Component {
                     id="email"
                     label="Type your email"
                     required
-                    invalid={errors.email ? true : false  }
+                    className = {errors.email ? 'is-invalid' : ''}
                   >
                     <div className="invalid-feedback">
-                     
+                        {errors.email}
                     </div>
                   </MDBInput>
                 </MDBCol>
@@ -77,11 +78,10 @@ class RegisterPopup extends Component {
                     id="password"
                     label="Password"
                     required
-                    invalid={errors.password ? true : false  }
+                    className = {errors.password ? 'is-invalid' : ''}
                   >
-                    <div className="valid-feedback">Looks good!</div>
                     <div className="invalid-feedback">
-                      Provide a valid password!
+                     {errors.password }
                     </div>
                   </MDBInput>
                 </MDBCol>
@@ -89,17 +89,16 @@ class RegisterPopup extends Component {
                   <MDBInput
                     value={password2}
                     icon="lock"
-                    onChange={this.changeHandler}
+                    onChange={this.hangdleOnchange}
                     type="password"
                     id="password2"
                     name="password2"
                     label="Confirm Password"
-                    invalid={errors.password2 ? true : false  }
+                    className = {errors.password2 ? 'is-invalid' : ''}
                   >
                     <div className="invalid-feedback">
-                      Provide a valid confirm password!
+                        {errors.password2 }
                     </div>
-                    <div className="valid-feedback">Looks good!</div>
                   </MDBInput>
                 </MDBCol>
               </MDBRow>
@@ -114,12 +113,11 @@ class RegisterPopup extends Component {
                     name="phone"
                     label="Phone"
                     required
-                    invalid={errors.phone ? true : false  }
+                    className = {errors.phone ? 'is-invalid' : ''}
                   >
                     <div className="invalid-feedback">
-                      Please provide a valid phone.
+                      {errors.phone}
                     </div>
-                    <div className="valid-feedback">Looks good!</div>
                   </MDBInput>
                 </MDBCol>
                 <MDBCol md="4">
@@ -132,12 +130,7 @@ class RegisterPopup extends Component {
                     name="DOB"
                     label="Day of Birth"
                     required
-                    invalid={errors.DOB ? true : false  }
                   >
-                    <div className="invalid-feedback">
-                      Please provide a valid phone.
-                    </div>
-                    <div className="valid-feedback">Looks good!</div>
                   </MDBInput>
                 </MDBCol>
                 <MDBCol md="4">
@@ -150,12 +143,7 @@ class RegisterPopup extends Component {
                     name="fullName"
                     label="Name"
                     required
-                    invalid={errors.fullName ? true : false  }
                   >
-                    <div className="invalid-feedback">
-                      Please provide a valid phone.
-                    </div>
-                    <div className="valid-feedback">Looks good!</div>
                   </MDBInput>
                 </MDBCol>
                 </MDBRow>
@@ -168,11 +156,13 @@ class RegisterPopup extends Component {
                   onChange={this.hangdleOnchange}
                   name="userType" 
                   id="userType" 
+                  required
                 >
-                 <option value = "-1">Select User Type</option>
+                  <option value = "-1">Select User Type</option>
                   <option value = "passenger">Passenger</option>
                   <option value = "driver">Driver</option>
                   </Input>
+                  <span className = "text-danger">{errors.userType}</span>
                 </MDBCol>
               </MDBRow>
               <div className="text-center mt-4">
@@ -197,6 +187,6 @@ const mapStateToProps = (state) => {
       errors :state.errorsReducer
    }     
 };
-export default connect(mapStateToProps,{register})(RegisterPopup)
+export default connect(mapStateToProps,{register,getErrors})(RegisterPopup)
 
 

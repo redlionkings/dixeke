@@ -9,6 +9,7 @@ import { MDBRow,
   MDBIcon,
   MDBCardHeader,
   MDBContainer} from "mdbreact";
+import AvatarEditor from 'react-avatar-editor';
 import { connect } from "react-redux";
 import {getMyProfile} from '../../action/auth';
 import jwtDecode from 'jwt-decode';
@@ -28,17 +29,17 @@ class ProfiePopup extends Component {
             fullName : "",
             phone : "",
             DOB : "",
-            avatar:"",
+            avatar:"uploads/15621690312751.jpg",
             file : null
         };
     };
     componentDidMount() {
-        const token = localStorage.getItem('token');
-        if (!token) return
+      const token = localStorage.getItem('token');
+      const fingerPrint = localStorage.getItem('fingerprint');
+        if (!token && !fingerPrint) return
+        setHeaders(token,fingerPrint)
         const { profile } = this.props.auth;
-        console.log(profile)
         this.props.getMyProfile(profile.id, (user) => {
-          console.log(user)
             this.setState(user)
         })
       }
@@ -46,7 +47,7 @@ class ProfiePopup extends Component {
     hangdleOnchange = e => {
         this.setState({
             [e.target.name] : e.target.value,
-            file : e.target.files && e.target.file[0]
+            file : e.target.files && e.target.files[0]
         }, () => {
             const formData = new FormData();
             formData.append('avatar', this.state.file)
@@ -67,8 +68,8 @@ class ProfiePopup extends Component {
 
     render() {
      const {errors} = this.props
-     const {email,password,password2,phone, DOB,userType, fullName} = this.state
-        return (
+     const {email,phone, DOB,userType, fullName} = this.state
+     return (
           <MDBContainer className="p-3">
             <MDBCard>
               <MDBCardBody>
@@ -81,104 +82,89 @@ class ProfiePopup extends Component {
                   onSubmit={this.hangdleSumbit}
                   className="grey-text text-left"
                 >
-                  <MDBRow>
+                  <MDBRow className='mt-4'>
                     <MDBCol md="4">
-                      <div className="input-group">
-                        <div className="input-group-prepend">
-                          <span
-                            className="input-group-text"
-                            id="inputGroupFileAddon01"
-                          >
-                            Upload
-                          </span>
-                        </div>
-                        <div className="custom-file">
-                          <input
-                            type="file"
-                            className="custom-file-input"
-                            id="inputGroupFile01"
-                            aria-describedby="inputGroupFileAddon01"
+                        <AvatarEditor
+                          image= {this.state.avatar && `http://localhost:5000/${this.state.avatar}`}
+                          width={250}
+                          height={300}
+                          border={0}
+                          alt = "avatar"/>
+                        <input type="file" name = "file" onChange= {this.hangdleOnchange} file = {this.state.file}></input>
+                      </MDBCol>
+                    <MDBCol> 
+                      <MDBRow> 
+                        <MDBCol>
+                          <MDBInput
+                            value={email}
+                            name="email"
+                            icon="envelope"
+                            type="email"
+                            id="email"
+                            label="Type your email"
                           />
-                          <label
-                            className="custom-file-label"
-                            htmlFor="inputGroupFile01"
+                        </MDBCol>
+                        <MDBCol>
+                          <MDBInput
+                            value={phone}
+                            icon="phone"
+                            type="number"
+                            id="phone"
+                            name="phone"
+                            label="Phone"
+                          />
+                        </MDBCol> 
+                      </MDBRow>
+                      <MDBRow>
+                        <MDBCol>
+                          <MDBInput
+                            value={DOB}
+                            icon="calendar-alt"
+                            onChange={this.hangdleOnchange}
+                            type="date"
+                            id="DOB"
+                            name="DOB"
+                            label="Day of Birth"
+                            required
                           >
-                            Choose file
-                          </label>
-                        </div>
-                      </div>
+                            <div className="invalid-feedback">
+                              Please provide a valid phone.
+                            </div>
+                            <div className="valid-feedback">
+                              Looks good!
+                            </div>
+                          </MDBInput>
+                        </MDBCol>
+                        <MDBCol>
+                          <MDBInput
+                            value={fullName}
+                            icon="user-circle"
+                            onChange={this.hangdleOnchange}
+                            type="text"
+                            id="fullName"
+                            name="fullName"
+                            label="Name"
+                            required
+                          >
+                            <div className="invalid-feedback">
+                              Please provide a valid phone.
+                            </div>
+                            <div className="valid-feedback">
+                              Looks good!
+                            </div>
+                          </MDBInput>
+                        </MDBCol>
+                      </MDBRow>  
                     </MDBCol>
-
-                    <MDBCol md="4">
-                      <MDBInput
-                        value={email}
-                        name="email"
-                        icon="envelope"
-                        type="email"
-                        id="email"
-                        label="Type your email"
-                      />
-                    </MDBCol>
-                    <MDBCol md="4">
-                      <MDBInput
-                        value={phone}
-                        icon="phone"
-                        type="number"
-                        id="phone"
-                        name="phone"
-                        label="Phone"
-                      />
-                    </MDBCol>
-                  </MDBRow>
-                  <MDBRow>
-                    <MDBCol md="4">
-                      <MDBInput
-                        value={DOB}
-                        icon="calendar-alt"
-                        onChange={this.hangdleOnchange}
-                        type="date"
-                        id="DOB"
-                        name="DOB"
-                        label="Day of Birth"
-                        required
-                      >
-                        <div className="invalid-feedback">
-                          Please provide a valid phone.
-                        </div>
-                        <div className="valid-feedback">
-                          Looks good!
-                        </div>
-                      </MDBInput>
-                    </MDBCol>
-                    <MDBCol md="4">
-                      <MDBInput
-                        value={fullName}
-                        icon="user-circle"
-                        onChange={this.hangdleOnchange}
-                        type="text"
-                        id="fullName"
-                        name="fullName"
-                        label="Name"
-                        required
-                      >
-                        <div className="invalid-feedback">
-                          Please provide a valid phone.
-                        </div>
-                        <div className="valid-feedback">
-                          Looks good!
-                        </div>
-                      </MDBInput>
-                    </MDBCol>
-                  </MDBRow>
+                  </MDBRow>    
                   <div className="text-center mt-4">
                     <MDBBtn
                       color="light-blue"
                       className="mb-3"
                       type="submit"
-                    >
-                      Register
+                    >Save
                     </MDBBtn>
-                  </div>
+                  </div>>  
                 </form>
               </MDBCardBody>
             </MDBCard>

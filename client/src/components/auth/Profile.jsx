@@ -43,7 +43,6 @@ class Profile extends Component {
     // })
      const { profile } = this.props.auth;
       this.props.getMyProfile(profile.id, (user) => {
-        console.log('123zz',user)
           this.setState(user)
       })
     // if( (Date.now) / 1000 > decoded.exp) {
@@ -51,10 +50,11 @@ class Profile extends Component {
     // }
   }
   onChange = (e) => {
+    console.log(e.target.files)
       this.setState({
           [e.target.name] : e.target.value,
           file : e.target.files && e.target.files[0]
-          
+        
       }, () => { 
            const formData = new FormData();
            

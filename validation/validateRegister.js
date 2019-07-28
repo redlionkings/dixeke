@@ -14,7 +14,7 @@ const {User} = require("../model/user")
     //validate
     if(_.isEmpty(data.email))  //true is ok, false invalid
     {
-        error.email = "email is required"
+        error.email = "Email is required"
     }else if(!validator.isEmail(data.email)){
         error.email = "Email is Invalid"
     }else { 
@@ -24,27 +24,33 @@ const {User} = require("../model/user")
 
     if(_.isEmpty(data.phone))  //true is ok, false invalid
     {
-        error.phone = "phone is required"
+        error.phone = "Phone is required"
     }else { 
         const user = await User.findOne({phone : data.phone})
-        if(user) error.phone = "phone exit"
+        if(user) error.phone = "Phone exit"
     }
 
     //password
     if (_.isEmpty(data.password)) {
-        error.password = "password is required"
+        error.password = "Password is required"
     }else if(!validator.isLength(data.password, {min : 6}))
     {
-        console.log(data.password)
-        error.password = "password has at least 6 charators"
+        error.password = "Password has at least 6 charators"
     }
     //password 2
-    if (validator.isEmpty(data.password2)) {
-        error.password2 = "confirm password is required"
+    if (_.isEmpty(data.password2)) {
+        error.password2 = "Confirm password is required"
     }else if(!validator.equals(data.password, data.password2))
     {
-        error.password2 = "password not match "
+        error.password2 = "Confirm password not match "
     }
+
+    console.log(data)
+
+    if (data.userType == '-1' || !data.userType){
+        error.userType = 'User Type not selected'
+    }
+
     return {
         isValid : _.isEmpty(error),
         error

@@ -17,13 +17,12 @@ class App extends Component {
   
   componentDidMount() {
     const token = localStorage.getItem('token');
-    if (!token) return
+
+    const fingerPrint = localStorage.getItem('fingerprint');
+    if (!token && !fingerPrint) return
     const decoded = jwtDecode(token)
+    setHeaders(token,fingerPrint)
     this.props.setUserCurrent(decoded)
-    getFingerPrint(fingerPrint => {
-      console.log(123123123)
-      setHeaders(token,fingerPrint)
-    })
     if( (Date.now) / 1000 > decoded.exp) {
         this.props.logout();
     }

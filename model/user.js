@@ -4,8 +4,8 @@ const UserSchema = new mongoose.Schema({
     password : {type: String, required : true},
     fullName : {type :String, required : true},
     userType : {type: String, required: true},
-    phone : {type: Number, required : true, unique:true},
-    DOB:{type :Date ,required: true},
+    phone : {type: String, required : true, unique:true},
+    DOB:{type :String ,required: true},
     registerDate : {
         type :Date ,
         default: new Date().getTime()
