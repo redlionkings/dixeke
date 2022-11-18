@@ -15,7 +15,7 @@
     "react-avatar": "^3.6.0",
     "react-avatar-editor": "^11.0.7",
     "react-dom": "^16.8.6",
-    "react-scripts": "3.0.1",
+    "react-scripts": "5.0.1",
     "react-toasts": "^3.0.3",
     "reactstrap": "^8.0.0"
   },
